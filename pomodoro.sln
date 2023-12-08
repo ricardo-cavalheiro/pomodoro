@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CCDCD0F8-510F-413D-989C-037908089053}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodoro.Core", "src\Pomodoro.Core\Pomodoro.Core.csproj", "{0455894E-E897-455B-976B-EFF4F2C105D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodoro.CLI", "src\Pomodoro.CLI\Pomodoro.CLI.csproj", "{DC908E78-1F9F-4BFB-A109-0841414AA515}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0455894E-E897-455B-976B-EFF4F2C105D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0455894E-E897-455B-976B-EFF4F2C105D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0455894E-E897-455B-976B-EFF4F2C105D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0455894E-E897-455B-976B-EFF4F2C105D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC908E78-1F9F-4BFB-A109-0841414AA515}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC908E78-1F9F-4BFB-A109-0841414AA515}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC908E78-1F9F-4BFB-A109-0841414AA515}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC908E78-1F9F-4BFB-A109-0841414AA515}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0455894E-E897-455B-976B-EFF4F2C105D8} = {CCDCD0F8-510F-413D-989C-037908089053}
+		{DC908E78-1F9F-4BFB-A109-0841414AA515} = {CCDCD0F8-510F-413D-989C-037908089053}
+	EndGlobalSection
+EndGlobal
