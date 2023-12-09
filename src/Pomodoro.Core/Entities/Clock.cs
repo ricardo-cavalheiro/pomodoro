@@ -48,4 +48,14 @@ public class Clock
   {
     return _clockTimer.RemainingTime();
   }
+
+  public TimeSpan TotalElapsedTime()
+  {
+    if (IsCompleted)
+    {
+      return EndDate - StartDate;
+    }
+
+    return TimeSpan.Zero;
+  }
 }

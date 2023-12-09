@@ -6,23 +6,21 @@ public class Task
 {
   public Guid Id { get; private set; } = Guid.NewGuid();
 
-  private readonly List<Clock> _clocks;
+  private readonly Queue<Clock> _clocks;
 
-  public int AmountOfTasks { get; private set; } = TaskConstants.DefaultAmountOfClocks;
+  public int AmountOfTimers { get; private set; }
 
   public string Name { get; private set; }
 
-  public bool IsCompleted { get; private set; } = false;
-
   public Clock CurrentActiveClock { get; private set; }
 
-  public Task(string name, Clock clock, int amountOfTasks = TaskConstants.DefaultAmountOfClocks)
+  public Task(string name, Clock clock, int amountOfTimers = TaskConstants.DefaultAmountOfTimers)
   {
     Name = name;
-    AmountOfTasks = amountOfTasks;
+    AmountOfTimers = amountOfTimers;
     _clocks = [];
 
-    if (amountOfTasks > TaskConstants.DefaultAmountOfClocks)
+    if (amountOfTimers > TaskConstants.DefaultAmountOfTimers)
     {
       AddRangeClocks(clock);
     }
@@ -44,44 +42,37 @@ public class Task
     CurrentActiveClock.StopClock();
   }
 
-  public TimeSpan ClocksTotalTime()
+  public bool IsCompleted()
   {
-    var totalTime = TimeSpan.FromMinutes(0);
-
-    foreach (Clock clock in _clocks)
-    {
-      totalTime += clock.WorkInterval.Duration;
-    }
-
-    return totalTime;
+    return _clocks.All(clock => clock.IsCompleted);
   }
 
-  public void MarkTaskAsCompleted(bool force = false)
+  public TimeSpan TaskTotalEstimatedTime()
   {
-    if (force)
-    {
-      IsCompleted = true;
-      return;
-    }
+    return _clocks.Aggregate(
+      TimeSpan.Zero,
+      (totalTime, clock) => totalTime + clock.WorkInterval.Duration
+    );
+  }
 
-    foreach (var clock in _clocks)
-    {
-      if (!clock.IsCompleted) return;
-    }
-
-    IsCompleted = true;
+  public TimeSpan TaskTotalElapsedTime()
+  {
+    return _clocks.Aggregate(
+      TimeSpan.Zero,
+      (totalTime, clock) => totalTime + clock.TotalElapsedTime()
+    );
   }
 
   public void AddClock(Clock newClock)
   {
-    _clocks.Add(newClock);
+    _clocks.Enqueue(newClock);
   }
 
   public void AddRangeClocks(Clock clock)
   {
-    for (var i = 0; i < AmountOfTasks; i++)
+    for (var i = 0; i < AmountOfTimers; i++)
     {
-      _clocks.Add(new Clock(clock.WorkInterval.Duration, clock.BreakInterval.Duration));
+      _clocks.Enqueue(new Clock(clock.WorkInterval.Duration, clock.BreakInterval.Duration));
     }
   }
 }

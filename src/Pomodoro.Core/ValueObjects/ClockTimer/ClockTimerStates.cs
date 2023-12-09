@@ -19,14 +19,13 @@ public abstract class CustomTimer(Timer timer)
 
   protected virtual void OnTimerElapsed(object? sender, ElapsedEventArgs eventArgs)
   {
-    OnElapsed.Invoke(sender, eventArgs);
+    OnElapsed?.Invoke(sender, eventArgs);
   }
 }
 
 public class WorkState : CustomTimer
 {
   private readonly Clock _clock;
-
 
   public WorkState(Clock clock) : base(new Timer(clock.WorkInterval.Duration))
   {

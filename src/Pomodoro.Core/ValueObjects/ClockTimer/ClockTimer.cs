@@ -54,6 +54,5 @@ public class ClockTimer
 
   private void OnBreakElapsed(object? sender, ElapsedEventArgs e)
   {
-    _currentTimer.Stop();
   }
 }

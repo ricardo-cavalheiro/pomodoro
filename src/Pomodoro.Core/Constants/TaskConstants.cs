@@ -2,5 +2,5 @@
 
 public class TaskConstants
 {
-  public const int DefaultAmountOfClocks = 1;
+  public const int DefaultAmountOfTimers = 1;
 }
