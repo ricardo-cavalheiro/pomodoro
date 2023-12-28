@@ -1,5 +1,3 @@
-using Pomodoro.Core.Constants;
-
 namespace Pomodoro.Core.Entities;
 
 public class Task
@@ -14,22 +12,34 @@ public class Task
 
   public Clock CurrentActiveClock { get; private set; }
 
-  public Task(string name, Clock clock, int amountOfTimers = TaskConstants.DefaultAmountOfTimers)
+  public Settings Settings { get; private set; }
+
+  public Task(string name, Settings? settings, int amountOfTimers = Settings.DefaultAmountOfTimers)
   {
     Name = name;
     AmountOfTimers = amountOfTimers;
+    Settings = settings ?? new Settings();
     _clocks = [];
 
-    if (amountOfTimers > TaskConstants.DefaultAmountOfTimers)
+    if (amountOfTimers > Settings.DefaultAmountOfTimers)
     {
-      AddRangeClocks(clock);
+      for (var i = 0; i < AmountOfTimers; i++)
+      {
+        _clocks.Enqueue(new Clock(Settings.DefaultWorkTime, Settings.DefaultBreakTime));
+      }
     }
     else
     {
-      AddClock(clock);
+      _clocks.Enqueue(new Clock(Settings.DefaultWorkTime, Settings.DefaultBreakTime));
     }
 
-    CurrentActiveClock = clock;
+    CurrentActiveClock = _clocks.Peek();
+
+    CurrentActiveClock.OnClockEnd += () =>
+    {
+      _clocks.Dequeue();
+      CurrentActiveClock = _clocks.Peek();
+    };
   }
 
   public void StartTask()
@@ -66,13 +76,5 @@ public class Task
   public void AddClock(Clock newClock)
   {
     _clocks.Enqueue(newClock);
-  }
-
-  public void AddRangeClocks(Clock clock)
-  {
-    for (var i = 0; i < AmountOfTimers; i++)
-    {
-      _clocks.Enqueue(new Clock(clock.WorkInterval.Duration, clock.BreakInterval.Duration));
-    }
   }
 }

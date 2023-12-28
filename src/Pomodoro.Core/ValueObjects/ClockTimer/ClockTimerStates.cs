@@ -36,12 +36,18 @@ public class WorkState : CustomTimer
 
   public override TimeSpan ElapsedTime()
   {
-    return DateTime.Now - _clock.WorkInterval.StartDate;
+    return
+      !_clock.WorkInterval.IsCompleted
+        ? DateTime.Now - _clock.WorkInterval.StartDate
+        : TimeSpan.Zero;
   }
 
   public override TimeSpan RemainingTime()
   {
-    return _clock.WorkInterval.StartDate.AddMinutes(_clock.WorkInterval.Duration.TotalMinutes) - DateTime.Now;
+    return
+      !_clock.WorkInterval.IsCompleted
+        ? _clock.WorkInterval.StartDate.AddMinutes(_clock.WorkInterval.Duration.TotalMinutes) - DateTime.Now
+        : TimeSpan.Zero;
   }
 
   public override void Start()
@@ -79,12 +85,18 @@ public class BreakState : CustomTimer
 
   public override TimeSpan ElapsedTime()
   {
-    return DateTime.Now - _clock.BreakInterval.StartDate;
+    return
+      !_clock.BreakInterval.IsCompleted
+        ? DateTime.Now - _clock.BreakInterval.StartDate
+        : TimeSpan.Zero;
   }
 
   public override TimeSpan RemainingTime()
   {
-    return _clock.BreakInterval.StartDate.AddMinutes(_clock.BreakInterval.Duration.TotalMinutes) - DateTime.Now;
+    return
+      !_clock.BreakInterval.IsCompleted
+        ? _clock.BreakInterval.StartDate.AddMinutes(_clock.BreakInterval.Duration.TotalMinutes) - DateTime.Now
+        : TimeSpan.Zero;
   }
 
   public override void Start()

@@ -1,5 +1,6 @@
 ﻿namespace Pomodoro.Core.Entities;
 
+using Pomodoro.Core.Enums;
 using Pomodoro.Core.ValueObjects;
 using Pomodoro.Core.ValueObjects.ClockTimer;
 
@@ -8,6 +9,8 @@ public class Clock
   public readonly Guid Id = Guid.NewGuid();
 
   private readonly ClockTimer _clockTimer;
+
+  public EClockTimerStates CurrentState = EClockTimerStates.Work;
 
   public bool AutoStartBreak { get; set; } = false;
 
@@ -20,6 +23,8 @@ public class Clock
   public DateTime StartDate => WorkInterval.StartDate;
 
   public DateTime EndDate => BreakInterval.EndDate;
+
+  public event Action OnClockEnd;
 
   public Clock(TimeSpan workInterval, TimeSpan breakInterval)
   {
@@ -54,8 +59,13 @@ public class Clock
     if (IsCompleted)
     {
       return EndDate - StartDate;
+    } else {
+      return DateTime.Now - StartDate;
     }
+  }
 
-    return TimeSpan.Zero;
+  public void OnClockEnded()
+  {
+    OnClockEnd.Invoke();
   }
 }

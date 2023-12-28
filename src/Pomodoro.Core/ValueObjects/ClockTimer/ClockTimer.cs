@@ -1,6 +1,7 @@
 ﻿namespace Pomodoro.Core.ValueObjects.ClockTimer;
 
 using System.Timers;
+using Pomodoro.Core.Enums;
 using Pomodoro.Core.Entities;
 
 public class ClockTimer
@@ -15,6 +16,7 @@ public class ClockTimer
 
     var workState = new WorkState(_clock);
     _currentTimer = workState;
+
     workState.OnElapsed += OnWorkElapsed;
 
     var breakState = new BreakState(_clock);
@@ -43,16 +45,19 @@ public class ClockTimer
 
   private void OnWorkElapsed(object? sender, ElapsedEventArgs e)
   {
-    _clock.BreakInterval.StartDate = e.SignalTime;
     _currentTimer = new BreakState(_clock);
+    _clock.CurrentState = EClockTimerStates.Interval;
+    _clock.BreakInterval.StartDate = e.SignalTime;
 
     if (_clock.AutoStartBreak)
     {
+      _clock.BreakInterval.StartDate = e.SignalTime;
       _currentTimer.Start();
     }
   }
 
   private void OnBreakElapsed(object? sender, ElapsedEventArgs e)
   {
+    _clock.OnClockEnded();
   }
 }
