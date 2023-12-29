@@ -12,7 +12,7 @@ public class Clock
 
   public EClockTimerStates CurrentState = EClockTimerStates.Work;
 
-  public bool AutoStartBreak { get; set; } = false;
+  public bool AutoStartBreak { get; set; } = true;
 
   public WorkInterval WorkInterval { get; private set; }
 
@@ -34,38 +34,15 @@ public class Clock
     _clockTimer = new ClockTimer(this);
   }
 
-  public void StartClock()
-  {
-    _clockTimer.StartTimer();
-  }
+  public void StartClock() => _clockTimer.StartTimer();
 
-  public void StopClock()
-  {
-    _clockTimer.StopTimer();
-  }
+  public void StopClock() => _clockTimer.StopTimer();
 
-  public TimeSpan ElapsedTime()
-  {
-    return _clockTimer.ElapsedTime();
-  }
+  public TimeSpan ElapsedTime() => _clockTimer.ElapsedTime();
 
-  public TimeSpan RemainingTime()
-  {
-    return _clockTimer.RemainingTime();
-  }
+  public TimeSpan RemainingTime() => _clockTimer.RemainingTime();
 
-  public TimeSpan TotalElapsedTime()
-  {
-    if (IsCompleted)
-    {
-      return EndDate - StartDate;
-    } else {
-      return DateTime.Now - StartDate;
-    }
-  }
+  public TimeSpan TotalElapsedTime() => IsCompleted ? EndDate - StartDate : DateTime.Now - StartDate;
 
-  public void OnClockEnded()
-  {
-    OnClockEnd.Invoke();
-  }
+  public void OnClockEnded() => OnClockEnd.Invoke();
 }

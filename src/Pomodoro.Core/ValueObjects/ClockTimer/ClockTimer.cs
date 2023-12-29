@@ -17,47 +17,34 @@ public class ClockTimer
     var workState = new WorkState(_clock);
     _currentTimer = workState;
 
-    workState.OnElapsed += OnWorkElapsed;
-
-    var breakState = new BreakState(_clock);
-    breakState.OnElapsed += OnBreakElapsed;
+    _currentTimer.OnElapsed += OnWorkElapsed;
   }
 
-  public void StartTimer()
-  {
-    _currentTimer.Start();
-  }
+  public void StartTimer() => _currentTimer.Start();
 
-  public void StopTimer()
-  {
-    _currentTimer.Stop();
-  }
+  public void StopTimer() => _currentTimer.Stop();
 
-  public TimeSpan ElapsedTime()
-  {
-    return _currentTimer.ElapsedTime();
-  }
+  public TimeSpan ElapsedTime() => _currentTimer.ElapsedTime();
 
-  public TimeSpan RemainingTime()
-  {
-    return _currentTimer.RemainingTime();
-  }
+  public TimeSpan RemainingTime() => _currentTimer.RemainingTime();
 
   private void OnWorkElapsed(object? sender, ElapsedEventArgs e)
   {
     _currentTimer = new BreakState(_clock);
+    _currentTimer.OnElapsed += OnBreakElapsed;
+
     _clock.CurrentState = EClockTimerStates.Interval;
     _clock.BreakInterval.StartDate = e.SignalTime;
+    _clock.BreakInterval.IsActive = true;
 
     if (_clock.AutoStartBreak)
     {
-      _clock.BreakInterval.StartDate = e.SignalTime;
       _currentTimer.Start();
     }
   }
 
-  private void OnBreakElapsed(object? sender, ElapsedEventArgs e)
-  {
-    _clock.OnClockEnded();
-  }
+  private void OnBreakElapsed(
+    object? sender,
+    ElapsedEventArgs e
+  ) => _clock.OnClockEnded();
 }
