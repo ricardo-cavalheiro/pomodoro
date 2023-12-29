@@ -1,5 +1,6 @@
 ﻿namespace Pomodoro.Core.Entities;
 
+using Pomodoro.Core.Enums;
 using Pomodoro.Core.ValueObjects;
 using Pomodoro.Core.ValueObjects.ClockTimer;
 
@@ -9,7 +10,9 @@ public class Clock
 
   private readonly ClockTimer _clockTimer;
 
-  public bool AutoStartBreak { get; set; } = false;
+  public EClockTimerStates CurrentState = EClockTimerStates.Work;
+
+  public bool AutoStartBreak { get; set; } = true;
 
   public WorkInterval WorkInterval { get; private set; }
 
@@ -21,6 +24,8 @@ public class Clock
 
   public DateTime EndDate => BreakInterval.EndDate;
 
+  public event Action OnClockEnd;
+
   public Clock(TimeSpan workInterval, TimeSpan breakInterval)
   {
     WorkInterval = new WorkInterval(workInterval);
@@ -29,33 +34,15 @@ public class Clock
     _clockTimer = new ClockTimer(this);
   }
 
-  public void StartClock()
-  {
-    _clockTimer.StartTimer();
-  }
+  public void StartClock() => _clockTimer.StartTimer();
 
-  public void StopClock()
-  {
-    _clockTimer.StopTimer();
-  }
+  public void StopClock() => _clockTimer.StopTimer();
 
-  public TimeSpan ElapsedTime()
-  {
-    return _clockTimer.ElapsedTime();
-  }
+  public TimeSpan ElapsedTime() => _clockTimer.ElapsedTime();
 
-  public TimeSpan RemainingTime()
-  {
-    return _clockTimer.RemainingTime();
-  }
+  public TimeSpan RemainingTime() => _clockTimer.RemainingTime();
 
-  public TimeSpan TotalElapsedTime()
-  {
-    if (IsCompleted)
-    {
-      return EndDate - StartDate;
-    }
+  public TimeSpan TotalElapsedTime() => IsCompleted ? EndDate - StartDate : DateTime.Now - StartDate;
 
-    return TimeSpan.Zero;
-  }
+  public void OnClockEnded() => OnClockEnd.Invoke();
 }

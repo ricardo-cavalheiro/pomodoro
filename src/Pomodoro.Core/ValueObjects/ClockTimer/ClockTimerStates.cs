@@ -17,10 +17,10 @@ public abstract class CustomTimer(Timer timer)
 
   public abstract TimeSpan RemainingTime();
 
-  protected virtual void OnTimerElapsed(object? sender, ElapsedEventArgs eventArgs)
-  {
-    OnElapsed?.Invoke(sender, eventArgs);
-  }
+  protected virtual void OnTimerElapsed(
+    object? sender,
+    ElapsedEventArgs eventArgs
+  ) => OnElapsed.Invoke(sender, eventArgs);
 }
 
 public class WorkState : CustomTimer
@@ -34,23 +34,27 @@ public class WorkState : CustomTimer
     _timer.Elapsed += OnWorkPeriodEnded;
   }
 
-  public override TimeSpan ElapsedTime()
-  {
-    return DateTime.Now - _clock.WorkInterval.StartDate;
-  }
+  public override TimeSpan ElapsedTime() =>
+      _clock.WorkInterval.IsActive
+        ? DateTime.Now - _clock.WorkInterval.StartDate
+        : TimeSpan.Zero;
 
-  public override TimeSpan RemainingTime()
-  {
-    return _clock.WorkInterval.StartDate.AddMinutes(_clock.WorkInterval.Duration.TotalMinutes) - DateTime.Now;
-  }
+  public override TimeSpan RemainingTime() =>
+      _clock.WorkInterval.IsActive
+        ? _clock.WorkInterval.StartDate.AddMinutes(_clock.WorkInterval.Duration.TotalMinutes) - DateTime.Now
+        : TimeSpan.Zero;
 
   public override void Start()
   {
+    _clock.WorkInterval.IsActive = true;
+
     _timer.Start();
   }
 
   public override void Stop()
   {
+    _clock.WorkInterval.IsActive = false;
+
     _timer.Stop();
   }
 
@@ -61,6 +65,7 @@ public class WorkState : CustomTimer
 
     _clock.WorkInterval.EndDate = eventArgs.SignalTime;
     _clock.WorkInterval.IsCompleted = true;
+    _clock.WorkInterval.IsActive = false;
 
     base.OnTimerElapsed(source, eventArgs);
   }
@@ -77,23 +82,30 @@ public class BreakState : CustomTimer
     _timer.Elapsed += OnBreakPeriodEnded;
   }
 
-  public override TimeSpan ElapsedTime()
-  {
-    return DateTime.Now - _clock.BreakInterval.StartDate;
-  }
+  public override TimeSpan ElapsedTime() =>
+      _clock.BreakInterval.IsActive
+        ? DateTime.Now - _clock.BreakInterval.StartDate
+        : TimeSpan.Zero;
 
   public override TimeSpan RemainingTime()
   {
-    return _clock.BreakInterval.StartDate.AddMinutes(_clock.BreakInterval.Duration.TotalMinutes) - DateTime.Now;
+    return
+      _clock.BreakInterval.IsActive
+        ? _clock.BreakInterval.StartDate.AddMinutes(_clock.BreakInterval.Duration.TotalMinutes) - DateTime.Now
+        : TimeSpan.Zero;
   }
 
   public override void Start()
   {
+    _clock.BreakInterval.IsActive = true;
+
     _timer.Start();
   }
 
   public override void Stop()
   {
+    _clock.BreakInterval.IsActive = false;
+
     _timer.Stop();
   }
 
@@ -104,6 +116,7 @@ public class BreakState : CustomTimer
 
     _clock.BreakInterval.EndDate = eventArgs.SignalTime;
     _clock.BreakInterval.IsCompleted = true;
+    _clock.BreakInterval.IsActive = false;
 
     base.OnTimerElapsed(source, eventArgs);
   }
