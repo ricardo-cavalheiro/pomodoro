@@ -3,11 +3,14 @@
 using System.Timers;
 using Pomodoro.Core.Entities;
 
-public abstract class CustomTimer(Timer timer)
+public abstract class ClockTimerState(Timer timer)
 {
   protected Timer _timer = timer;
 
-  public event EventHandler<ElapsedEventArgs> OnElapsed;
+  public event EventHandler<ElapsedEventArgs> OnElapsed = (
+    object? sender,
+    ElapsedEventArgs eventArgs
+  ) => { };
 
   public abstract void Start();
 
@@ -23,7 +26,7 @@ public abstract class CustomTimer(Timer timer)
   ) => OnElapsed.Invoke(sender, eventArgs);
 }
 
-public class WorkState : CustomTimer
+public class WorkState : ClockTimerState
 {
   private readonly Clock _clock;
 
@@ -35,14 +38,14 @@ public class WorkState : CustomTimer
   }
 
   public override TimeSpan ElapsedTime() =>
-      _clock.WorkInterval.IsActive
-        ? DateTime.Now - _clock.WorkInterval.StartDate
-        : TimeSpan.Zero;
+    _clock.WorkInterval.IsActive
+      ? DateTime.Now - _clock.WorkInterval.StartDate
+      : TimeSpan.Zero;
 
   public override TimeSpan RemainingTime() =>
-      _clock.WorkInterval.IsActive
-        ? _clock.WorkInterval.StartDate.AddMinutes(_clock.WorkInterval.Duration.TotalMinutes) - DateTime.Now
-        : TimeSpan.Zero;
+    _clock.WorkInterval.IsActive
+      ? _clock.WorkInterval.StartDate.AddMinutes(_clock.WorkInterval.Duration.TotalMinutes) - DateTime.Now
+      : TimeSpan.Zero;
 
   public override void Start()
   {
@@ -71,7 +74,7 @@ public class WorkState : CustomTimer
   }
 }
 
-public class BreakState : CustomTimer
+public class BreakState : ClockTimerState
 {
   private readonly Clock _clock;
 
@@ -83,17 +86,14 @@ public class BreakState : CustomTimer
   }
 
   public override TimeSpan ElapsedTime() =>
-      _clock.BreakInterval.IsActive
-        ? DateTime.Now - _clock.BreakInterval.StartDate
-        : TimeSpan.Zero;
+    _clock.BreakInterval.IsActive
+      ? DateTime.Now - _clock.BreakInterval.StartDate
+      : TimeSpan.Zero;
 
-  public override TimeSpan RemainingTime()
-  {
-    return
-      _clock.BreakInterval.IsActive
-        ? _clock.BreakInterval.StartDate.AddMinutes(_clock.BreakInterval.Duration.TotalMinutes) - DateTime.Now
-        : TimeSpan.Zero;
-  }
+  public override TimeSpan RemainingTime() =>
+    _clock.BreakInterval.IsActive
+      ? _clock.BreakInterval.StartDate.AddMinutes(_clock.BreakInterval.Duration.TotalMinutes) - DateTime.Now
+      : TimeSpan.Zero;
 
   public override void Start()
   {

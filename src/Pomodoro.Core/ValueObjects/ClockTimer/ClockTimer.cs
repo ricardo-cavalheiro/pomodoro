@@ -8,7 +8,7 @@ public class ClockTimer
 {
   private readonly Clock _clock;
 
-  private CustomTimer _currentTimer;
+  private ClockTimerState _currentTimer;
 
   public ClockTimer(Clock clock)
   {
@@ -35,12 +35,8 @@ public class ClockTimer
 
     _clock.CurrentState = EClockTimerStates.Interval;
     _clock.BreakInterval.StartDate = e.SignalTime;
-    _clock.BreakInterval.IsActive = true;
 
-    if (_clock.AutoStartBreak)
-    {
-      _currentTimer.Start();
-    }
+    if (_clock.Settings.AutoStartBreak) _currentTimer.Start();
   }
 
   private void OnBreakElapsed(
