@@ -28,7 +28,8 @@ public class Task
 
     var clock = new Clock(
       Settings.DefaultWorkTime,
-      Settings.DefaultBreakTime
+      Settings.DefaultBreakTime,
+      Settings
     );
     AddClock(clock);
 
@@ -43,7 +44,8 @@ public class Task
     {
       var clock = new Clock(
         Settings.DefaultWorkTime,
-        Settings.DefaultBreakTime
+        Settings.DefaultBreakTime,
+        Settings
       );
       AddClock(clock);
 

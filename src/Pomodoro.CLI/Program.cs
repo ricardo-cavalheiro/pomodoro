@@ -7,8 +7,6 @@ public class Program
 {
   public static void Main()
   {
-    var workInterval = TimeSpan.FromMinutes(0.1);
-    var breakInterval = TimeSpan.FromMinutes(0.1);
     var settings = new Settings();
     var task = new Task("Work", settings, 2);
     var taskCompleted = new ManualResetEvent(false);
@@ -31,7 +29,7 @@ public class Program
       Console.WriteLine($"Actual time: {DateTime.Now}");
       Console.WriteLine($"Is Work time completed: {task.CurrentActiveTimer.WorkInterval.IsCompleted}");
       Console.WriteLine($"Is Break time completed: {task.CurrentActiveTimer.BreakInterval.IsCompleted}");
-      Console.WriteLine($"Is Break Auto Start on: {task.CurrentActiveTimer.AutoStartBreak}");
+      Console.WriteLine($"Is Break Auto Start on: {task.CurrentActiveTimer.Settings.AutoStartBreak}");
 
       if (task.IsCompleted() || task.CurrentActiveTimer.IsCompleted)
       {

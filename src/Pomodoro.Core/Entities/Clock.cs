@@ -10,26 +10,33 @@ public class Clock
 
   private readonly ClockTimer _clockTimer;
 
-  public EClockTimerStates CurrentState = EClockTimerStates.Work;
+  public Settings Settings { get; private set; }
 
-  public bool AutoStartBreak { get; set; } = true;
+  public EClockTimerStates CurrentState = EClockTimerStates.Work;
 
   public WorkInterval WorkInterval { get; private set; }
 
   public BreakInterval BreakInterval { get; private set; }
 
-  public bool IsCompleted => WorkInterval.IsCompleted && BreakInterval.IsCompleted;
+  public bool IsCompleted =>
+    WorkInterval.IsCompleted
+    && BreakInterval.IsCompleted;
 
   public DateTime StartDate => WorkInterval.StartDate;
 
   public DateTime EndDate => BreakInterval.EndDate;
 
-  public event Action OnClockEnd;
+  public event Action OnClockEnd = () => { };
 
-  public Clock(TimeSpan workInterval, TimeSpan breakInterval)
+  public Clock(
+    TimeSpan workInterval,
+    TimeSpan breakInterval,
+    Settings settings
+  )
   {
     WorkInterval = new WorkInterval(workInterval);
     BreakInterval = new BreakInterval(breakInterval);
+    Settings = settings;
 
     _clockTimer = new ClockTimer(this);
   }
@@ -42,7 +49,10 @@ public class Clock
 
   public TimeSpan RemainingTime() => _clockTimer.RemainingTime();
 
-  public TimeSpan TotalElapsedTime() => IsCompleted ? EndDate - StartDate : DateTime.Now - StartDate;
+  public TimeSpan TotalElapsedTime() =>
+    IsCompleted
+      ? EndDate - StartDate
+      : DateTime.Now - StartDate;
 
   public void OnClockEnded() => OnClockEnd.Invoke();
 }
