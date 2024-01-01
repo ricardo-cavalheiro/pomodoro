@@ -3,14 +3,17 @@
 using System.Timers;
 using Pomodoro.Core.Entities;
 
-public abstract class ClockTimerState(Timer timer)
+public abstract class ClockTimerState(Timer timer, Clock clock)
 {
   protected Timer _timer = timer;
+
+  protected Clock _clock = clock;
 
   public event EventHandler<ElapsedEventArgs> OnElapsed = (
     object? sender,
     ElapsedEventArgs eventArgs
-  ) => { };
+  ) =>
+  { };
 
   public abstract void Start();
 
@@ -20,7 +23,7 @@ public abstract class ClockTimerState(Timer timer)
 
   public abstract TimeSpan RemainingTime();
 
-  protected virtual void OnTimerElapsed(
+  protected void OnTimerElapsed(
     object? sender,
     ElapsedEventArgs eventArgs
   ) => OnElapsed.Invoke(sender, eventArgs);
@@ -28,12 +31,11 @@ public abstract class ClockTimerState(Timer timer)
 
 public class WorkState : ClockTimerState
 {
-  private readonly Clock _clock;
-
-  public WorkState(Clock clock) : base(new Timer(clock.WorkInterval.Duration))
+  public WorkState(Clock clock) : base(
+      new Timer(clock.WorkInterval.Duration),
+      clock
+    )
   {
-    _clock = clock;
-    _timer = new Timer(_clock.WorkInterval.Duration);
     _timer.Elapsed += OnWorkPeriodEnded;
   }
 
@@ -76,12 +78,12 @@ public class WorkState : ClockTimerState
 
 public class BreakState : ClockTimerState
 {
-  private readonly Clock _clock;
-
-  public BreakState(Clock clock) : base(new Timer(clock.WorkInterval.Duration))
+  public BreakState(Clock clock) :
+    base(
+      new Timer(clock.WorkInterval.Duration),
+      clock
+    )
   {
-    _clock = clock;
-    _timer = new Timer(_clock.BreakInterval.Duration);
     _timer.Elapsed += OnBreakPeriodEnded;
   }
 
