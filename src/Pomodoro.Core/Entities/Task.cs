@@ -78,6 +78,8 @@ public class Task
   public void AddClock(Clock newClock)
   {
     _clocks.Add(newClock);
+
+    AmountOfTimersToBeExecuted++;
     CreatedTimersCount++;
   }
 }

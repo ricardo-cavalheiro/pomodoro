@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodoro.Core", "src\Pomodo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodoro.CLI", "src\Pomodoro.CLI\Pomodoro.CLI.csproj", "{DC908E78-1F9F-4BFB-A109-0841414AA515}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{22E54916-32AA-4656-A80A-C21F35F7AD92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodoro.UnitTests", "test\Pomodoro.UnitTests\Pomodoro.UnitTests.csproj", "{F291F25F-C03F-4BEA-853C-177BAB505932}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +30,14 @@ Global
 		{DC908E78-1F9F-4BFB-A109-0841414AA515}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC908E78-1F9F-4BFB-A109-0841414AA515}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC908E78-1F9F-4BFB-A109-0841414AA515}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F291F25F-C03F-4BEA-853C-177BAB505932}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F291F25F-C03F-4BEA-853C-177BAB505932}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F291F25F-C03F-4BEA-853C-177BAB505932}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F291F25F-C03F-4BEA-853C-177BAB505932}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0455894E-E897-455B-976B-EFF4F2C105D8} = {CCDCD0F8-510F-413D-989C-037908089053}
 		{DC908E78-1F9F-4BFB-A109-0841414AA515} = {CCDCD0F8-510F-413D-989C-037908089053}
+		{F291F25F-C03F-4BEA-853C-177BAB505932} = {22E54916-32AA-4656-A80A-C21F35F7AD92}
 	EndGlobalSection
 EndGlobal
